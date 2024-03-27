@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <h2>Completed Tasks</h2>
+  <div class="completed-tasks">
     <!--Completed Tasks Table-->
     <table class="table">
       <thead>
@@ -15,13 +14,13 @@
           <td>{{ task.title }}</td>
           <td>{{ task.completedDate }}</td>
           <td>
-            <button @click="viewTaskDetails(task)">View Details</button>
+            <button class="btn-details" @click="viewTaskDetails(task)">View Details</button>
           </td>
         </tr>
       </tbody>
     </table>
+    <p>Total Completed Tasks: {{ completedTasksCount }}</p>
   </div>
-  <p>Total Completed Tasks: {{ completedTasksCount }}</p>
 </template>
 
 <script>
@@ -48,3 +47,34 @@ export default {
   }
 };
 </script>
+
+<style>
+.completed-tasks {
+  margin: 20px;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  margin-top:3%
+}
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table th {
+  background-color: #f2f2f2;
+}
+.btn-details {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.btn-details:hover {
+  background-color: #0056b3;
+}
+</style>
