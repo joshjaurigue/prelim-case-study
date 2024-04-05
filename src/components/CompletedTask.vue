@@ -1,25 +1,30 @@
 <template>
   <div class="completed-tasks">
     <!--Completed Tasks Table-->
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Task Title</th>
-          <th>Completed Date</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="task in completedTasks" :key="task.id">
-          <td>{{ task.title }}</td>
-          <td>{{ task.completedDate }}</td>
-          <td>
-            <button class="btn-details" @click="viewTaskDetails(task)">View Details</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <p>Total Completed Tasks: {{ completedTasksCount }}</p>
+    <template v-if="completedTasks.length > 0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Task Title</th>
+            <th>Completed Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="task in completedTasks" :key="task.id">
+            <td>{{ task.title }}</td>
+            <td>{{ task.completedDate }}</td>
+            <td>
+              <button class="btn-details" @click="viewTaskDetails(task)">View Details</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Total Completed Tasks: {{ completedTasksCount }}</p>
+    </template>
+    <template v-else>
+      <p class="fw-bold">No completed tasks yet.</p>
+    </template>
   </div>
 </template>
 

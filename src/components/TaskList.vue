@@ -18,7 +18,7 @@
          <td>{{ task.title }}</td>
          <td>
            <router-link :to="{ name: 'task-details', params: { taskId: task.id }}" class="button-link">View Details</router-link>
-           <button class="action-button edit" @click="editTask(index)">Edit</button>
+           <button class="action-button edit" @click="toggleEditTaskForm(index)">Edit</button>
            <button class="action-button delete" @click="deleteTask(index)">Delete</button>
            <button v-if="!task.prioritized" class="action-button prioritize" @click="togglePrioritize(task.id)">Prioritize</button>
            <button v-else class="action-button deprioritize" @click="togglePrioritize(task.id)">Deprioritize</button>
@@ -37,6 +37,9 @@
          <th>Actions</th>
        </tr>
      </thead>
+     <tbody>
+       <p class="fw-bold text-center">No task yet.</p> 
+     </tbody>
    </table>
    </div>
    <!--Counting of tasks -->
@@ -133,13 +136,14 @@ export default {
      this.newTask = { title: '', details: '' };
      this.saveTasksToLocalStorage();
      this.showAddTaskForm = false;
+     this.showEditTaskForm = false;
      alert("Task added successfully!");
      
    },
    editTask(index) {
-     this.editedTask = { ...this.tasks[index] };
-     this.showEditTaskForm = true;
-   },
+    this.editedTask = { ...this.tasks[index] }; 
+    this.showEditTaskForm = true;
+  },
    updateTask() {
      // checks if both title and details inputs are not empty
      if (!this.editedTask.title.trim() || !this.editedTask.details.trim()) {
@@ -152,6 +156,7 @@ export default {
      this.tasks[index] = { ...this.editedTask };
      this.editedTask = { title: '', details: '' };
      this.showEditTaskForm = false;
+     this.showAddTaskForm = false;
      this.saveTasksToLocalStorage();
      alert("Task edited successfully.");
    },
@@ -176,26 +181,26 @@ export default {
      this.tasks[index].prioritized = !this.tasks[index].
      prioritized;
 
-// Sort tasks based on prioritization status
-this.tasks.sort((a, b) => {
-  if (a.prioritized && !b.prioritized) {
-    return -1; // a comes before b
-  } else if (!a.prioritized && b.prioritized) {
-    return 1; // b comes before a
-  } else {
-    return 0; // maintain current order
-  }
-});
+    // Sort tasks based on prioritization status
+    this.tasks.sort((a, b) => {
+      if (a.prioritized && !b.prioritized) {
+        return -1; // a comes before b
+      } else if (!a.prioritized && b.prioritized) {
+        return 1; // b comes before a
+      } else {
+        return 0; // maintain current order
+      }
+    });
 
-this.saveTasksToLocalStorage();
+    this.saveTasksToLocalStorage();
 },
 // toggles add task form
 toggleAddTaskForm() {
-this.showAddTaskForm = !this.showAddTaskForm;
+    this.showAddTaskForm = !this.showAddTaskForm;
 },
 // toggles completed task through check box
 toggleTaskCompletion(task) {
-task.completed = !task.completed;
+    task.completed = !task.completed;
 if (task.completed) {
   task.completedDate = new Date().toLocaleDateString(); // sets completion date when checkbox is clicked
   
@@ -212,14 +217,25 @@ if (task.completed) {
   alert("Task completed!");
 } 
 },
-// saving of tasks in local storage
-saveTasksToLocalStorage() {
-localStorage.setItem('tasks', JSON.stringify(this.tasks));
-localStorage.setItem('taskIdCounter', JSON.stringify(this.taskIdCounter));
-},
-// navigate to task details route with the task ID
-viewTaskDetails(task) {
-this.$router.push({ name: 'task-details', params: { taskId: task.id } });
+  // saving of tasks in local storage
+  saveTasksToLocalStorage() {
+    localStorage.setItem('tasks', JSON.stringify(this.tasks));
+    localStorage.setItem('taskIdCounter', JSON.stringify(this.taskIdCounter));
+  },
+  // navigate to task details route with the task ID
+  viewTaskDetails(task) {
+    this.$router.push({ name: 'task-details', params: { taskId: task.id } });
+  },
+// Modify toggleEditTaskForm to reset editedTask when the edit form is toggled
+toggleEditTaskForm(index) {
+  if (index !== undefined) {
+    // If an index is provided, set editedTask
+    this.editedTask = { ...this.tasks[index] };
+  } else {
+    // Otherwise, reset editedTask to null
+    this.editedTask = null;
+  }
+  this.showEditTaskForm = !this.showEditTaskForm;
 }
 }
 };
